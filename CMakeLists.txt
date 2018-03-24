@@ -311,20 +311,21 @@ add_subdirectory(src)
 
 set(SECP256 ./src/secp256k1/src/secp256k1.c)
 add_library(secp256k1 ${SECP256})
+target_link_libraries(secp256k1 gmp)
 
 link_directories(${BDB_ROOT_DIR}/lib)
 
-add_executable(bitcoin-cli ${CMAKE_CURRENT_SOURCE_DIR}/src/bitcoin-cli.cpp)
-add_executable(bitcoin-tx ${CMAKE_CURRENT_SOURCE_DIR}/src/bitcoin-tx.cpp)
-add_executable(bitcoind ${CMAKE_CURRENT_SOURCE_DIR}/src/bitcoind.cpp)
+add_executable(unitus-cli ${CMAKE_CURRENT_SOURCE_DIR}/src/bitcoin-cli.cpp)
+add_executable(unitus-tx ${CMAKE_CURRENT_SOURCE_DIR}/src/bitcoin-tx.cpp)
+add_executable(unitusd ${CMAKE_CURRENT_SOURCE_DIR}/src/bitcoind.cpp)
 
-target_link_libraries(bitcoin-cli coin db_cxx db secp256k1 gmp leveldb ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${ANL} miniupnpc event event_pthreads pthread )
-target_link_libraries(bitcoin-tx coin secp256k1 coin leveldb ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${ANL} pthread)
+target_link_libraries(unitus-cli coin db_cxx db gmp secp256k1 leveldb ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${ANL} miniupnpc event event_pthreads pthread )
+target_link_libraries(unitus-tx coin secp256k1 coin leveldb ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${ANL} pthread)
 
 IF (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	target_link_libraries(bitcoind coin db_cxx db secp256k1 gmp leveldb ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${ANL} zmq miniupnpc event event_pthreads pthread )
+	target_link_libraries(unitusd coin db_cxx db gmp secp256k1 leveldb ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${ANL} zmq miniupnpc event event_pthreads pthread )
 else()
-	target_link_libraries(bitcoind coin db_cxx db secp256k1 leveldb ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${ANL} pthread)
+	target_link_libraries(unitusd coin db_cxx db secp256k1 leveldb ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${ANL} pthread)
 endif()
 
 add_subdirectory(src/qt)
